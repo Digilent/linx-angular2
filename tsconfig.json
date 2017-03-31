@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "es2015",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "lib": [
+            "es2015",
+            "dom"
+        ],
+        "noImplicitAny": false,
+        "suppressImplicitAnyIndexErrors": true,
+        "declaration": true,
+        "outDir": "./dist"
+    },
+    "files": [
+        "src/providers/device/device.ts",
+        "src/providers/agent/agent.ts",
+        "src/providers/connection-handler/connection-handler.ts",
+        "src/providers/transports/generic-transport.ts",
+        "src/providers/transports/http-transport.ts"
+    ],
+    "angularCompilerOptions": {
+        "genDir": "./dist",
+        "skipMetadataEmit": false
+    }
+}

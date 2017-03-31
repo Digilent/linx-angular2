@@ -1,0 +1,33 @@
+{
+  "name": "linx-angular2",
+  "version": "0.1.0",
+  "description": "LINX library using Angular2",
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -rf dist && ngc -p tsconfig.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Digilent/linx-angular2.git"
+  },
+  "author": "sudharsan.sukumar5@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Digilent/linx-angular2/issues"
+  },
+  "homepage": "https://github.com/Digilent/linx-angular2#readme",
+  "dependencies": {
+    "@angular/core": "2.4.8",
+    "rxjs": "5.0.1",
+    "zone.js": "0.7.2"
+  },
+  "devDependencies": {
+    "@angular/common": "2.4.8",
+    "@angular/compiler": "2.4.8",
+    "@angular/compiler-cli": "2.4.8",
+    "@angular/core": "2.4.8",
+    "@angular/platform-browser": "2.4.8",
+    "@angular/platform-server": "2.4.8",
+    "typescript": "2.0.10"
+  }
+}

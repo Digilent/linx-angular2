@@ -1,0 +1,14 @@
+npm-debug.log
+node_modules
+jspm_packages
+.idea
+lib
+build
+/dist
+*.metadata.json
+*.js.map
+*.component.js
+*.interface.js
+*.service.js
+*.module.js
+*src/*.d.ts
