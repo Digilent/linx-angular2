@@ -187,7 +187,35 @@ export class DeviceService {
     /**************************************************************************
     *   Digital
     **************************************************************************/
-    digitalWrite(pinNumber, value): Observable<{ statusCode: number, message: string }> {
+    digitalGetChans(): Observable<{ statusCode: number, message: string, chans: number[] }> {
+        let packet = this.generatePacket(this.getPacketSize(), 8);
+        return Observable.create((observer) => {
+            this.sendPacketAndParseResponse(packet).subscribe(
+                (data) => {
+                    let digitalChans = [];
+                    let packetSize = (data[1] << 8) | data[2];
+                    for (let i = 0; i < packetSize - 6; i++) {
+                        digitalChans.push(data[i + 5]);
+                    }
+                    observer.next({
+                        statusCode: 0,
+                        message: 'ok',
+                        value: digitalChans
+                    })
+                },
+                (err) => {
+                    observer.error({
+                        statusCode: 1,
+                        message: err,
+                        chans: []
+                    })
+                },
+                () => { }
+            );
+        });
+    }
+
+    digitalWrite(pinNumber: number, value: boolean): Observable<{ statusCode: number, message: string }> {
         return this.digitalWriteAdvanced(1, [pinNumber], [value]);
     }
 
@@ -819,6 +847,7 @@ export class DeviceService {
                 (data) => {
                     data = new Uint8Array(data);
                     console.log(data);
+                    let packetCalculatedSize = (data[1] << 8) | (data[2] & 255);
                     let checksum = this.generateChecksum(data);
                     if (checksum !== data[data.length - 1]) {
                         observer.error('Invalid checksum');
@@ -828,7 +857,7 @@ export class DeviceService {
                         observer.error('Invalid first byte');
                         return;
                     }
-                    if (data.length !== data[1]) {
+                    if (data.length !== packetCalculatedSize) {
                         observer.error('Invalid packet size');
                         return;
                     }
@@ -852,11 +881,11 @@ export class DeviceService {
 
     private generatePacket(packetSize: number, commandNumber: number, commandParams?: Uint8Array) {
         let packet: Uint8Array = new Uint8Array(packetSize);
-        packet[0] = parseInt('0xFF');
-        packet[1] = packetSize;
-        let packetNumberByteArray: Uint8Array = this.numberAsByteArray(this.packetNumber, 2);
-        packet[2] = packetNumberByteArray[0];
-        packet[3] = packetNumberByteArray[1];
+        packet[0] = 255;
+        let packetSizeByteArray: Uint8Array = this.numberAsByteArray(packetSize, 2);
+        packet[1] = packetSizeByteArray[0];
+        packet[2] = packetSizeByteArray[1];
+        packet[3] = this.packetNumber & 255;
         let commandNumberByteArray: Uint8Array = this.numberAsByteArray(commandNumber, 2);
         packet[4] = commandNumberByteArray[0];
         packet[5] = commandNumberByteArray[1];
